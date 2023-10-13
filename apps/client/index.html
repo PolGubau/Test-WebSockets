@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatTest</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        #chat_section {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            width: 100%;
+            border: 1px solid #ccc;
+            height: 100%;
+            min-height: 500px;
+            padding: 10px;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .form_message {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #messages {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            justify-content: flex-end;
+            align-items: flex-start;
+            width: 100%;
+            height: 100%;
+            overflow-y: scroll;
+            overflow-x: hidden;
+
+        }
+
+        #messages li {
+            list-style: none;
+            border-radius: 13px;
+            padding: 10px;
+            width: fit-content;
+            padding-left: 20px;
+            padding-right: 20px;
+            background-color: #eee;
+        }
+
+        #message {
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 13px;
+        }
+
+        .button {
+            border-radius: 13px;
+
+        }
+    </style>
+    <script type="module">
+
+        import { io } from "https://cdn.socket.io/4.3.2/socket.io.esm.min.js";
+        const socket = io("http://localhost:3000");
+
+
+
+
+        const form = document.getElementById("form");
+        const input = document.getElementById("message");
+        const messages = document.getElementById("messages");
+
+        socket.on("chat message", (msg) => {
+            const item = `<li>${msg}</li>`
+            messages.insertAdjacentHTML("beforeend", item);
+        });
+        form.addEventListener("submit", (e) => {
+            e.preventDefault();
+            if (input.value) {
+                socket.emit("chat message", input.value);
+                input.value = "";
+            }
+        });
+
+
+    </script>
+
+
+</head>
+
+<body>
+
+    <h1>TestingChat</h1>
+
+
+    <section id="chat_section">
+
+        <ul id="messages">
+            <li>¡Aquí recibirás mensajes!</li>
+        </ul>
+
+
+        <form class="form_message" id="form">
+            <input type="text" name="message" id="message" placeholder="Message">
+            <input type="submit" class="button" value="Send">
+
+
+
+        </form>
+
+
+
+    </section>
+
+
+</body>
+
+</html>
